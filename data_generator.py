@@ -18,16 +18,11 @@ parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
-import config
-from gantry_mappings import GANTRY_TO_SECTION, SECTION_NAME_BY_ID
+import adult_config as config
 
 # 导入判别式辅助验证器（论文要求的真正辅助模型）
-try:
-    from auxiliary_models.discriminative_verifier import DiscriminativeVerifier
-    DISCRIMINATIVE_AVAILABLE = True
-except ImportError:
-    DISCRIMINATIVE_AVAILABLE = False
-    print("[Warning] Discriminative verifier not available, using rule-based fallback")
+# Adult数据集暂时使用规则判断
+DISCRIMINATIVE_AVAILABLE = False
 
 
 # ============================================================================
@@ -49,35 +44,28 @@ MODEL_NAME = config.FIXED_MODEL_NAME
 
 # ---------------------- 1.1 Task Specification ----------------------
 
-GANTRY_TASK_SPECIFICATION = """
-你是一个高速公路门架交易数据生成专家。你的任务是生成符合真实业务逻辑的门架通行记录。
+ADULT_TASK_SPECIFICATION = """
+You are an expert in generating Adult Census survey data. Your task is to generate realistic census records that follow real-world demographic and socioeconomic patterns.
 
-## 门架交易数据表结构 (GantryTransaction)
+## Adult Census Data Schema
 
-| 字段名 | 类型 | 说明 | 约束 |
-|--------|------|------|------|
-| gantry_transaction_id | String | 门架交易ID | 门架编号+交易批次号+主备卡标记（1-ETC主、2- ETC备、3-CPC主、4-CPC备）+批次内流水号（5位，00001~99999） |
-| gantry_id | String | 门架ID | 全网唯一编号 |
-| gantry_type | String | 门架类型 | 1=路段, 2=省界入口, 3=省界出口 |
-| transaction_time | DateTime | 交易时间 | ISO格式，必须晚于 entrance_time |
-| entrance_time | DateTime | 入口时间 | ISO格式，早于 transaction_time 30分钟-4小时 |
-| pay_fee | Integer | 应付费用(分) | 正整数，与里程正相关。单位：分，默认0。应收金额为优惠前金额 |
-| discount_fee | Integer | 优惠金额(分) | 单位：分，默认0。优惠金额为优惠减免金额，未优惠填0 |
-| fee_mileage | String | 收费里程(米) | 正整数字符串 |
-| media_type | Int | 通行介质类型 | 1=OBU, 2=CPC卡 |
-| vehicle_type | String | 车型 | 1-4=客车(一~四型), 11-16=货车(一~六型), 21-26=专项车 |
-| vehicle_sign | String | 车辆状态标识 | 0x00=大件运输（交易成功时有效）,0x01=非优惠车, 0x02=绿通车, 0x03=联合收割机, 0x04=集装箱车, 0xff=默认 |
-| axle_count | String | 轴数 | 客车通常2轴，货车2-6轴 |
-| total_weight | String | 总重量(kg) | 字符串，货车根据轴数有限重，单位kg |
-| transaction_type | String | 交易类型 | PBOC定义，如06为传统交易，09为复合交易。计费成功必填。 |
-| pass_state | String | 通行状态 | 1=有入口, 2=无入口 |
-| cpu_card_type | String | CPU卡类型 | 0=默认, 1=储值卡, 2=记账卡 |
-| pass_id | String | 通行ID | ETC长度从30为调整为36位；  
-（1）“01“+”卡网络编号“+”用户卡编号“+”卡内入口时间“，计费使用  
-（2）“00“+”0000“+” OBU序号编码“+”OBU内入口时间“，  
-CPC车辆通行标识passId，格式为“02“+”0000“+” CPC卡编码“+”入口时间“ |
-| section_id | String | 路段ID |  |
-| section_name | String | 路段名称 | |
+| Field | Type | Description | Constraints |
+|-------|------|-------------|-------------|
+| age | Integer | Age in years | 17-90 |
+| workclass | String | Work class | Private, Self-emp-not-inc, Self-emp-inc, Federal-gov, Local-gov, State-gov, Without-pay, Never-worked |
+| fnlwgt | Integer | Final weight | Census sampling weight |
+| education | String | Education level | Preschool to Doctorate (16 levels) |
+| education.num | Integer | Education years | 1-16 |
+| marital.status | String | Marital status | Married-civ-spouse, Divorced, Never-married, Separated, Widowed, etc. |
+| occupation | String | Occupation | 14 categories (Tech-support, Sales, Exec-managerial, Prof-specialty, etc.) |
+| relationship | String | Relationship | Wife, Own-child, Husband, Not-in-family, Other-relative, Unmarried |
+| race | String | Race | White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, Black |
+| sex | String | Sex | Female, Male |
+| capital.gain | Integer | Capital gain | 0-99999 (most are 0) |
+| capital.loss | Integer | Capital loss | 0-4356 (most are 0) |
+| hours.per.week | Integer | Hours per week | 1-99 (typically 40) |
+| native.country | String | Native country | United-States, etc. (40+ countries) |
+| income | String | Income class | <=50K, >50K |
 
 ## 核心业务规则
 

@@ -1,6 +1,0 @@
-age,sex,race,native.country,education,education.num,workclass,occupation,hours.per.week,marital.status,relationship,capital.gain,capital.loss,fnlwgt,income
-55,Male,White,United-States,HS-grad,9,Private,Adm-clerical,43,Divorced,Not-in-family,0,0,195092,<=50K
-48,Male,White,United-States,Some-college,10,Private,Exec-managerial,37,Divorced,Not-in-family,0,0,88573,<=50K
-39,Female,White,United-States,HS-grad,9,Private,Other-service,36,Married-civ-spouse,Wife,0,0,229838,<=50K
-31,Male,White,United-States,HS-grad,9,Private,Other-service,24,Never-married,Not-in-family,0,0,185026,<=50K
-33,Female,Black,United-States,HS-grad,9,Private,Other-service,48,Married-civ-spouse,Wife,0,0,151308,<=50K

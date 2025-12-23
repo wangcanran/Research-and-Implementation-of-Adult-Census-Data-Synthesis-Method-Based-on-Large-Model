@@ -204,42 +204,195 @@ class AdultAuxiliaryModelEnhancer:
     """
     辅助模型增强器
     
-    功能：
-    1. 使用判别式模型增强样本（如果有训练好的模型）
-    2. 预测缺失字段
-    3. 修正不一致字段
-    
-    注：这是一个占位实现，实际需要训练的辅助模型
+    支持两种模式：
+    1. 字段级预测器：预测缺失字段、修正不一致
+    2. 整体判别器：评估真实度、过滤低质量样本（推荐）
     """
     
-    def __init__(self, use_discriminative: bool = True):
+    def __init__(self, model_dir: str = None, use_discriminative: bool = True,
+                 use_holistic: bool = False, holistic_threshold: float = 0.5):
         """
         Args:
-            use_discriminative: 是否使用判别式模型
+            model_dir: 字段级预测器模型目录
+            use_discriminative: 是否使用字段级判别式模型
+            use_holistic: 是否使用整体判别器（推荐）
+            holistic_threshold: 整体判别器的真实度阈值
         """
         self.use_discriminative = use_discriminative
-        self.model = None  # 占位，实际需要加载训练好的模型
+        self.use_holistic = use_holistic
+        self.holistic_threshold = holistic_threshold
+        self.models = None
+        self.holistic_discriminator = None
+        
+        # 加载整体判别器（优先，推荐）
+        if use_holistic:
+            try:
+                import os
+                holistic_dir = "adult_v2/trained_holistic_discriminator"
+                if os.path.exists(os.path.join(holistic_dir, 'holistic_discriminator.pkl')):
+                    from .adult_holistic_discriminator import AdultHolisticDiscriminator
+                    self.holistic_discriminator = AdultHolisticDiscriminator()
+                    self.holistic_discriminator.load_model(holistic_dir)
+                    print(f"  [整体判别器] 已加载，阈值={holistic_threshold}")
+                else:
+                    print(f"  [警告] 整体判别器未找到: {holistic_dir}")
+                    print(f"  运行: python train_holistic_discriminator.py")
+            except Exception as e:
+                print(f"  [警告] 无法加载整体判别器: {e}")
+        
+        # 加载字段级预测器（可选，用于填充缺失字段）
+        if use_discriminative and model_dir:
+            try:
+                import os
+                # 优先尝试加载深度学习版本
+                if os.path.exists(os.path.join(model_dir, 'model_income.pt')):
+                    from .adult_discriminative_models_dl import AdultDiscriminativeModelsDL
+                    self.models = AdultDiscriminativeModelsDL()
+                    self.models.load_models(model_dir)
+                # 尝试加载ML版本（多算法）
+                elif os.path.exists(os.path.join(model_dir, 'models_ml.pkl')):
+                    from .adult_discriminative_models_ml import AdultDiscriminativeModelsML
+                    self.models = AdultDiscriminativeModelsML()
+                    self.models.load_models(model_dir)
+                # 回退到基础版本
+                else:
+                    from .adult_discriminative_models import AdultDiscriminativeModels
+                    self.models = AdultDiscriminativeModels()
+                    self.models.load_models(model_dir)
+            except Exception as e:
+                print(f"  [警告] 无法加载字段级预测器: {e}")
+                self.models = None
     
-    def enhance_batch(self, samples: List[Dict]) -> List[Dict]:
+    def enhance_batch(self, samples: List[Dict], verbose: bool = False) -> List[Dict]:
         """
         批量增强样本
         
-        目前是占位实现，直接返回原样本
-        实际应该：
-        1. 使用分类器预测income
-        2. 使用模型修正不一致的字段
-        3. 填充缺失字段
+        增强策略（优先级从高到低）：
+        1. 整体判别器：过滤低真实度样本（如果启用）
+        2. 字段级预测器：填充缺失字段、修正不一致（如果启用）
         """
-        # 占位实现：直接返回
-        return samples
+        enhanced = samples
+        
+        # 步骤1：使用整体判别器过滤（推荐）
+        if self.use_holistic and self.holistic_discriminator is not None:
+            enhanced, scores = self.holistic_discriminator.filter_samples(
+                enhanced, 
+                threshold=self.holistic_threshold,
+                verbose=verbose
+            )
+            if verbose:
+                print(f"  [整体判别器] 平均真实度: {sum(scores)/len(scores):.3f}")
+        
+        # 步骤2：使用字段级预测器填充和修正（可选）
+        if not self.use_discriminative or self.models is None:
+            return enhanced
+        
+        enhanced_final = []
+        filled_count = 0
+        corrected_count = 0
+        
+        for sample in enhanced:  # 注意：处理已经过整体判别器过滤的样本
+            enhanced_sample = sample.copy()
+            
+            # 1. 填充缺失的hours.per.week
+            if not sample.get('hours.per.week') or sample.get('hours.per.week') == '':
+                predicted_hours = self.models.predict(sample, 'hours')
+                if predicted_hours:
+                    enhanced_sample['hours.per.week'] = predicted_hours
+                    filled_count += 1
+            
+            # 2. 验证并可能修正income（如果与其他特征不一致）
+            if self._should_correct_income(sample):
+                predicted_income = self.models.predict(sample, 'income')
+                if predicted_income and predicted_income != sample.get('income'):
+                    enhanced_sample['income'] = predicted_income
+                    corrected_count += 1
+            
+            # 3. 填充缺失的occupation
+            if not sample.get('occupation') or sample.get('occupation') == '?':
+                predicted_occupation = self.models.predict(sample, 'occupation')
+                if predicted_occupation:
+                    enhanced_sample['occupation'] = predicted_occupation
+                    filled_count += 1
+            
+            # 4. 填充缺失的workclass
+            if not sample.get('workclass') or sample.get('workclass') == '?':
+                predicted_workclass = self.models.predict(sample, 'workclass')
+                if predicted_workclass:
+                    enhanced_sample['workclass'] = predicted_workclass
+                    filled_count += 1
+            
+            enhanced_final.append(enhanced_sample)
+        
+        if verbose and (filled_count > 0 or corrected_count > 0):
+            print(f"  [字段级预测器] 填充缺失字段: {filled_count}, 修正不一致: {corrected_count}")
+        
+        return enhanced_final
+    
+    def _should_correct_income(self, sample: Dict) -> bool:
+        """判断是否应该修正income字段"""
+        # 检查明显的不一致
+        age = sample.get('age', 0)
+        education_num = sample.get('education.num', 0)
+        hours = sample.get('hours.per.week', 0)
+        income = sample.get('income', '')
+        
+        try:
+            age = int(age)
+            education_num = int(education_num)
+            hours = int(hours)
+        except:
+            return False
+        
+        # 高学历 + 长工时 + 低收入 → 可能需要修正
+        if education_num >= 14 and hours >= 40 and income == '<=50K':
+            return True
+        
+        # 低学历 + 短工时 + 高收入 → 可能需要修正
+        if education_num <= 9 and hours <= 30 and income == '>50K':
+            return True
+        
+        return False
     
     def predict_missing_fields(self, sample: Dict) -> Dict:
-        """预测并填充缺失字段（占位）"""
-        return sample
+        """预测并填充缺失字段"""
+        if self.models is None:
+            return sample
+        
+        enhanced = sample.copy()
+        
+        # 预测缺失字段
+        if not sample.get('hours.per.week'):
+            hours = self.models.predict(sample, 'hours')
+            if hours:
+                enhanced['hours.per.week'] = hours
+        
+        if not sample.get('occupation') or sample.get('occupation') == '?':
+            occupation = self.models.predict(sample, 'occupation')
+            if occupation:
+                enhanced['occupation'] = occupation
+        
+        if not sample.get('workclass') or sample.get('workclass') == '?':
+            workclass = self.models.predict(sample, 'workclass')
+            if workclass:
+                enhanced['workclass'] = workclass
+        
+        return enhanced
     
     def correct_inconsistencies(self, sample: Dict) -> Dict:
-        """修正字段不一致（占位）"""
-        return sample
+        """修正字段不一致"""
+        if self.models is None:
+            return sample
+        
+        enhanced = sample.copy()
+        
+        # 修正income（如果不一致）
+        if self._should_correct_income(sample):
+            predicted_income = self.models.predict(sample, 'income')
+            if predicted_income:
+                enhanced['income'] = predicted_income
+        
+        return enhanced
 
 
 # ============================================================================
@@ -251,21 +404,36 @@ class AdultCurationPipeline:
     策展流程管道
     
     完整流程：Filter → Reweight → Label Enhance → Auxiliary Enhance
+    
+    支持两种辅助模型模式：
+    1. 整体判别器（推荐）- 自动学习分布，过滤低质量样本
+    2. 字段级预测器 - 填充缺失字段，修正不一致
     """
     
-    def __init__(self, use_reweighting: bool = True, use_enhancement: bool = True):
+    def __init__(self, use_reweighting: bool = True, use_enhancement: bool = True,
+                 model_dir: str = None, use_holistic: bool = True, 
+                 holistic_threshold: float = 0.5):
         """
         Args:
             use_reweighting: 是否使用重加权
             use_enhancement: 是否使用增强
+            model_dir: 字段级预测器模型目录（可选）
+            use_holistic: 是否使用整体判别器（推荐）
+            holistic_threshold: 整体判别器的真实度阈值（0-1）
         """
         self.filter = AdultSampleFilter(strict=True)
         self.reweighter = AdultSampleReweighter()
         self.label_enhancer = AdultLabelEnhancer(smoothing=0.1)
-        self.auxiliary_enhancer = AdultAuxiliaryModelEnhancer(use_discriminative=True)
+        self.auxiliary_enhancer = AdultAuxiliaryModelEnhancer(
+            model_dir=model_dir,
+            use_discriminative=use_enhancement and model_dir is not None,
+            use_holistic=use_holistic,
+            holistic_threshold=holistic_threshold
+        )
         
         self.use_reweighting = use_reweighting
         self.use_enhancement = use_enhancement
+        self.use_holistic = use_holistic
     
     def curate(self, samples: List[Dict]) -> Dict:
         """

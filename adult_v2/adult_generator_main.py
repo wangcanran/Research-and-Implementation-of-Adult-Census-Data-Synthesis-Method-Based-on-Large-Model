@@ -28,11 +28,17 @@ class AdultDataGenerator:
     """
     
     def __init__(self, target_distribution: Optional[Dict] = None, 
-                 use_advanced_features: bool = True):
+                 use_advanced_features: bool = True,
+                 model_dir: Optional[str] = None,
+                 use_holistic_discriminator: bool = True,
+                 holistic_threshold: float = 0.5):
         """
         Args:
             target_distribution: 目标分布
             use_advanced_features: 是否使用高级功能（启发式选择、Curation、Evaluation）
+            model_dir: 字段级预测器模型目录（可选）
+            use_holistic_discriminator: 是否使用整体判别器（推荐）
+            holistic_threshold: 整体判别器的真实度阈值（0-1，默认0.5）
         """
         # 统计学习器
         self.learner = AdultStatisticalLearner()
@@ -46,7 +52,10 @@ class AdultDataGenerator:
         # ========== II. Curation 组件 ==========
         self.curation_pipeline = AdultCurationPipeline(
             use_reweighting=use_advanced_features,
-            use_enhancement=use_advanced_features
+            use_enhancement=use_advanced_features,
+            model_dir=model_dir,
+            use_holistic=use_holistic_discriminator,
+            holistic_threshold=holistic_threshold
         )
         
         # ========== III. Evaluation 组件 ==========
@@ -104,65 +113,97 @@ class AdultDataGenerator:
     def generate_batch(self, n_samples: int,
                       condition: Optional[GenerationCondition] = None,
                       use_scheduler: bool = True,
-                      max_retries: int = 3) -> List[Dict]:
+                      max_retries: int = 3,
+                      batch_size: int = 10) -> List[Dict]:
         """
         批量生成样本（仅Generation阶段）
         
+        优化策略：
+        - 每次生成batch_size个样本（默认10个）
+        - 批量更新缓存和调度器
+        - 减少频繁更新的开销
+        
         Args:
-            n_samples: 生成样本数
+            n_samples: 总共生成样本数
             condition: 生成条件（如果为None且use_scheduler=True，则使用调度器）
             use_scheduler: 是否使用调度器（基于目标分布）
             max_retries: 每个样本最大重试次数
+            batch_size: 每批生成的样本数（默认10）
         
         Returns:
             生成的样本列表
         """
         if self.verbose:
-            print(f"\n[Generation] 生成 {n_samples} 个样本...")
+            print(f"\n[Generation] 生成 {n_samples} 个样本（批量模式，每批{batch_size}个）...")
         
-        samples = []
+        all_samples = []
         self.decomposer.reset_cache()
         
-        for i in range(n_samples):
-            if self.verbose and (i + 1) % 50 == 0:
-                print(f"  进度: {i + 1}/{n_samples}")
+        # 分批生成
+        num_batches = (n_samples + batch_size - 1) // batch_size
+        
+        for batch_idx in range(num_batches):
+            batch_start = batch_idx * batch_size
+            batch_end = min(batch_start + batch_size, n_samples)
+            batch_count = batch_end - batch_start
             
-            # 确定生成条件
-            if use_scheduler and condition is None:
-                gen_condition = self.scheduler.get_next_condition()
-            else:
-                gen_condition = condition if condition else GenerationCondition()
+            if self.verbose:
+                print(f"\n  批次 {batch_idx + 1}/{num_batches}: 生成 {batch_count} 个样本...")
             
-            # 生成样本
-            sample = None
-            for retry in range(max_retries):
-                try:
-                    sample = self.decomposer.decompose_and_generate(gen_condition)
-                    
-                    # 简单验证
-                    from .adult_task_spec import validate_sample
-                    is_valid, errors = validate_sample(sample)
-                    
-                    if is_valid:
-                        break
-                    elif retry == max_retries - 1 and self.verbose:
-                        print(f"  [警告] 样本{i+1}验证失败: {errors[:2]}")
-                except Exception as e:
-                    if retry == max_retries - 1 and self.verbose:
-                        print(f"  [错误] 样本{i+1}生成失败: {e}")
+            batch_samples = []
             
-            if sample:
-                samples.append(sample)
-                self.decomposer.update_cache(sample)
+            for i in range(batch_count):
+                # 确定生成条件
+                if use_scheduler and condition is None:
+                    gen_condition = self.scheduler.get_next_condition()
+                else:
+                    gen_condition = condition if condition else GenerationCondition()
                 
-                # 更新调度器统计
+                # 生成样本
+                sample = None
+                for retry in range(max_retries):
+                    try:
+                        sample = self.decomposer.decompose_and_generate(gen_condition)
+                        
+                        # 简单验证
+                        from .adult_task_spec import validate_sample
+                        is_valid, errors = validate_sample(sample)
+                        
+                        if is_valid:
+                            break
+                        elif retry == max_retries - 1 and self.verbose:
+                            print(f"    [警告] 样本{batch_start + i + 1}验证失败: {errors[:2]}")
+                    except Exception as e:
+                        if retry == max_retries - 1 and self.verbose:
+                            print(f"    [错误] 样本{batch_start + i + 1}生成失败: {e}")
+                
+                if sample:
+                    batch_samples.append(sample)
+            
+            # 批量更新缓存和调度器
+            if batch_samples:
+                all_samples.extend(batch_samples)
+                
+                # 批量更新缓存
+                for sample in batch_samples:
+                    self.decomposer.update_cache(sample)
+                
+                # 批量更新调度器
                 if use_scheduler:
-                    self.scheduler.update(sample)
+                    for sample in batch_samples:
+                        self.scheduler.update(sample)
+                
+                if self.verbose:
+                    cache_stats = self.decomposer.get_cache_stats()
+                    print(f"    本批生成: {len(batch_samples)} 个")
+                    print(f"    累计样本: {len(all_samples)}")
+                    if cache_stats:
+                        print(f"    平均年龄: {cache_stats.get('age_mean', 'N/A')}")
         
         if self.verbose:
-            print(f"  [完成] 成功生成 {len(samples)}/{n_samples} 个样本")
+            print(f"\n  [完成] 成功生成 {len(all_samples)}/{n_samples} 个样本")
         
-        return samples
+        return all_samples
     
     def generate_with_curation(self, n_samples: int,
                                condition: Optional[GenerationCondition] = None,

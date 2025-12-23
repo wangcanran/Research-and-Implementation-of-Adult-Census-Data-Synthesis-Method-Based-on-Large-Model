@@ -81,8 +81,7 @@ class AdultStatisticalLearner:
             '<=50K': float(income_counts.get('<=50K', 0) / total),
             '>50K': float(income_counts.get('>50K', 0) / total)
         }
-        
-        print(f"    ✓ 边缘分布")
+        print(f"    [OK] Marginal distributions")
     
     def _learn_conditional_distributions(self, df: pd.DataFrame):
         """学习9种条件分布"""
@@ -175,7 +174,7 @@ class AdultStatisticalLearner:
                 'std_when_nonzero': float(has_gain['capital.gain'].std()) if len(has_gain) > 0 else 0
             }
         
-        print(f"    ✓ 条件分布 (9种)")
+        print(f"    [OK] Conditional distributions (9 types)")
     
     def _learn_correlations(self, df: pd.DataFrame):
         """学习相关系数"""
@@ -190,7 +189,7 @@ class AdultStatisticalLearner:
                     correlations[f"{field1}_{field2}"] = float(corr)
         
         self.learned_stats['correlations'] = correlations
-        print(f"    ✓ 相关系数")
+        print(f"    [OK] Correlations")
     
     def get_stats(self) -> Dict:
         """获取学习到的统计信息"""
