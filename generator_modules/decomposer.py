@@ -25,12 +25,14 @@ class SampleWiseDecomposer:
     4. 回退生成机制
     """
     
-    def __init__(self, demo_manager: DemonstrationManager):
+    def __init__(self, demo_manager: DemonstrationManager, target_distribution: Dict = None):
         """
         Args:
             demo_manager: 示例管理器
+            target_distribution: 目标分布（用于自适应校正）
         """
         self.demo_manager = demo_manager
+        self.target_distribution = target_distribution or {}
         
         # 生成缓存（照搬data_generator.py）
         self.generation_cache = {
@@ -89,6 +91,43 @@ class SampleWiseDecomposer:
         
         return stats
     
+    def _get_adaptive_hint(self, field: str, current_sample: Dict) -> str:
+        """生成自适应引导提示（核心改进）"""
+        cache_stats = self.get_cache_stats()
+        
+        # 需要至少5个样本才启用
+        if not cache_stats or cache_stats['count'] < 5:
+            return ""
+        
+        hints = []
+        
+        # 收入分布校正
+        if field == 'outcome' and 'income' in self.target_distribution:
+            current_ratio = cache_stats.get('high_income_ratio', 0)
+            target_ratio = self.target_distribution['income'].get('>50K', 0.24)
+            
+            deviation = abs(current_ratio - target_ratio)
+            if deviation > 0.1:  # 偏离>10%
+                if current_ratio < target_ratio:
+                    hints.append(f"当前高收入比例{current_ratio*100:.1f}%偏低，目标{target_ratio*100:.1f}%，建议多生成>50K")
+                else:
+                    hints.append(f"当前高收入比例{current_ratio*100:.1f}%偏高，目标{target_ratio*100:.1f}%，建议多生成<=50K")
+        
+        # 年龄分布校正
+        if field in ['demographics', 'work'] and cache_stats.get('age_mean'):
+            current_age = cache_stats['age_mean']
+            target_age = 38  # Adult数据集的平均年龄
+            
+            if abs(current_age - target_age) > 5:
+                if current_age < target_age:
+                    hints.append(f"当前平均年龄{current_age}岁偏低，建议生成较大年龄(35-50岁)")
+                else:
+                    hints.append(f"当前平均年龄{current_age}岁偏高，建议生成较小年龄(25-35岁)")
+        
+        if hints:
+            return "\n【自适应校正】" + "; ".join(hints)
+        return ""
+    
     def decompose_and_generate(self, condition: GenerationCondition) -> Dict:
         """
         分步生成完整样本（照搬data_generator.py的核心逻辑）
@@ -140,7 +179,7 @@ class SampleWiseDecomposer:
             return self._fallback_generate(group_name, condition, current_sample)
     
     def _build_prompt(self, group_name: str, current_sample: Dict, condition: GenerationCondition) -> str:
-        """构建prompt（照搬data_generator.py结构）"""
+        """构建prompt（照搬data_generator.py结构 + 自适应引导）"""
         # 选择示例
         demos = self.demo_manager.select_demonstrations(k=3, condition=condition)
         demo_text = self.demo_manager.format_demonstrations(demos)
@@ -160,12 +199,17 @@ class SampleWiseDecomposer:
         if condition.education_level:
             constraints += f"- Education level: {condition.education_level}\n"
         
+        # 【核心改进】自适应引导提示
+        adaptive_hint = self._get_adaptive_hint(group_name, current_sample)
+        
         # 组装prompt
         prompt = f"""{demo_text}
 {current_fields}
 Generate the following fields for an Adult Census record: {FIELD_GROUPS[group_name]}
 
-{constraints}
+{constraints}{adaptive_hint}
+
+IMPORTANT: Generate DIVERSE values. Vary the choices meaningfully - different races, countries, workclasses, occupations, etc. Avoid repeating similar patterns.
 
 Output ONLY a JSON object with these fields, no additional text:"""
         

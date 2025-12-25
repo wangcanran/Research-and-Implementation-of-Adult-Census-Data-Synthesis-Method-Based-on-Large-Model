@@ -1,5 +1,5 @@
 """
-最终评估：生成1000条样本并进行完整评估
+最终评估：生成3000条样本并进行完整评估
 使用判别器引导模式
 """
 
@@ -17,7 +17,7 @@ def main():
     print("Adult Census 数据生成系统 - 最终评估")
     print("=" * 80)
     print(f"\n开始时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"目标: 生成 1000 条样本")
+    print(f"目标: 生成 3000 条样本")
     print(f"模式: 判别器引导 (主动学习)")
     print(f"评估: Benchmark + Direct (全维度)")
     
@@ -43,9 +43,9 @@ def main():
     
     # ========== 生成数据 ==========
     print("\n" + "=" * 80)
-    print("Step 3: 生成 1000 条样本")
+    print("Step 3: 生成 3000 条样本")
     print("=" * 80)
-    print("\n提示: 生成过程可能需要较长时间，请耐心等待...")
+    print("\n提示: 生成过程可能需要较长时间（预计30-60分钟），请耐心等待...")
     print("进度提示: 每生成100条会显示一次进度\n")
     
     generation_start = time.time()
@@ -53,7 +53,7 @@ def main():
     # 分批生成，便于观察进度
     samples = []
     batch_size = 100
-    total_target = 1000
+    total_target = 3000
     
     for i in range(0, total_target, batch_size):
         batch_num = i // batch_size + 1
@@ -184,7 +184,7 @@ def main():
     print("Step 7: 保存结果")
     print("=" * 80)
     
-    output_file = "final_evaluation_1000_samples.csv"
+    output_file = "final_evaluation_3000_samples.csv"
     df = pd.DataFrame(samples)
     df.to_csv(output_file, index=False)
     

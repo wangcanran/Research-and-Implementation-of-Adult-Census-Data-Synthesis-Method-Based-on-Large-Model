@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1400" height="850" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <polygon points="0 0, 10 5, 0 10" fill="#37474F" />
+    </marker>
+  </defs>
+
+  <rect width="1400" height="850" fill="#FFFFFF"/>
+
+  <text x="700" y="45" font-family="Arial, sans-serif" font-size="30" font-weight="bold" text-anchor="middle" fill="#1A237E">
+    LLM-based Synthetic Data Generation Framework
+  </text>
+  <text x="700" y="75" font-family="Arial, sans-serif" font-size="15" text-anchor="middle" fill="#546E7A">
+    Discriminator-Guided Self-Instruct Approach
+  </text>
+
+  <text x="233" y="120" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#0D47A1">
+    Discriminator Training:
+  </text>
+  <text x="233" y="145" font-family="Arial, sans-serif" font-size="15" text-anchor="middle" fill="#546E7A">
+    Quality Assessment Model
+  </text>
+
+  <text x="700" y="120" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#6A1B9A">
+    LLM Generation Engine:
+  </text>
+  <text x="700" y="145" font-family="Arial, sans-serif" font-size="15" text-anchor="middle" fill="#546E7A">
+    Self-Instruct Synthesis Pipeline
+  </text>
+
+  <text x="1167" y="120" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#2E7D32">
+    Quality Control:
+  </text>
+  <text x="1167" y="145" font-family="Arial, sans-serif" font-size="15" text-anchor="middle" fill="#546E7A">
+    Validation and Evaluation
+  </text>
+
+  <g id="A1">
+    <rect x="50" y="180" width="366" height="110" rx="12" fill="#E3F2FD" stroke="#1976D2" stroke-width="3"/>
+    <text x="80" y="213" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#0D47A1">A1</text>
+    <text x="120" y="213" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#0D47A1">Real-world Dataset</text>
+    <text x="233" y="242" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">Ground truth samples for</text>
+    <text x="233" y="260" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">discriminator training</text>
+  </g>
+
+  <g id="A2">
+    <rect x="50" y="310" width="366" height="110" rx="12" fill="#E3F2FD" stroke="#1976D2" stroke-width="3"/>
+    <text x="80" y="343" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#0D47A1">A2</text>
+    <text x="120" y="343" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#0D47A1">Binary Classifier Training</text>
+    <text x="233" y="372" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">Real vs. Synthetic discrimination</text>
+    <text x="233" y="390" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">Authenticity scoring model</text>
+  </g>
+
+  <path d="M 233 290 L 233 310" stroke="#37474F" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+
+  <rect x="466" y="160" width="468" height="580" rx="15" fill="none" stroke="#7B1FA2" stroke-width="3" stroke-dasharray="10,5" opacity="0.5"/>
+
+  <g id="B1">
+    <rect x="484" y="180" width="432" height="110" rx="12" fill="#F3E5F5" stroke="#7B1FA2" stroke-width="3"/>
+    <text x="514" y="213" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#4A148C">B1</text>
+    <text x="554" y="213" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#4A148C">Intelligent Scheduler</text>
+    <text x="700" y="242" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">Distribution-based task scheduling</text>
+    <text x="700" y="260" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">Discriminator-guided active learning</text>
+  </g>
+
+  <g id="B2">
+    <rect x="484" y="310" width="432" height="110" rx="12" fill="#EDE7F6" stroke="#7B1FA2" stroke-width="3"/>
+    <text x="514" y="343" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#4A148C">B2</text>
+    <text x="554" y="343" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#4A148C">Large Language Model</text>
+    <text x="700" y="372" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">In-context learning with demonstrations</text>
+    <text x="700" y="390" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">Sequential field-wise generation</text>
+  </g>
+
+  <g id="B3">
+    <rect x="484" y="440" width="432" height="110" rx="12" fill="#F3E5F5" stroke="#7B1FA2" stroke-width="3"/>
+    <text x="514" y="473" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#4A148C">B3</text>
+    <text x="554" y="473" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#4A148C">Example Selector</text>
+    <text x="700" y="502" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">Quality + Similarity + Uncertainty</text>
+    <text x="700" y="520" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">Multi-metric demonstration selection</text>
+  </g>
+
+  <g id="B4">
+    <rect x="484" y="570" width="432" height="90" rx="12" fill="#F3E5F5" stroke="#7B1FA2" stroke-width="3"/>
+    <text x="514" y="603" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#4A148C">B4</text>
+    <text x="554" y="603" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#4A148C">Self-Instruct Feedback</text>
+    <text x="700" y="632" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">Iterative quality improvement loop</text>
+  </g>
+
+  <path d="M 700 290 L 700 310" stroke="#37474F" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 700 420 L 700 440" stroke="#37474F" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 700 550 L 700 570" stroke="#37474F" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+
+  <path d="M 916 570 L 950 570 L 950 240 L 916 240" stroke="#7B1FA2" stroke-width="2.5" stroke-dasharray="8,4" fill="none" marker-end="url(#arrow)"/>
+
+  <g id="C1">
+    <rect x="984" y="180" width="366" height="110" rx="12" fill="#E8F5E9" stroke="#388E3C" stroke-width="3"/>
+    <text x="1014" y="213" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#1B5E20">C1</text>
+    <text x="1054" y="213" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#1B5E20">Quality Curation</text>
+    <text x="1167" y="242" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">Rule-based validation</text>
+    <text x="1167" y="260" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">Discriminator scoring and filtering</text>
+  </g>
+
+  <g id="C2">
+    <rect x="984" y="310" width="366" height="110" rx="12" fill="#C8E6C9" stroke="#388E3C" stroke-width="3"/>
+    <text x="1014" y="343" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#1B5E20">C2</text>
+    <text x="1054" y="343" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#1B5E20">Synthetic Dataset</text>
+    <text x="1167" y="372" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#1B5E20" font-weight="bold">High-Fidelity Synthetic Data</text>
+    <text x="1167" y="390" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">Quality-assured samples</text>
+  </g>
+
+  <g id="C3">
+    <rect x="984" y="440" width="366" height="110" rx="12" fill="#E8F5E9" stroke="#388E3C" stroke-width="3"/>
+    <text x="1014" y="473" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#1B5E20">C3</text>
+    <text x="1054" y="473" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#1B5E20">Multi-dimensional Eval</text>
+    <text x="1167" y="502" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">Benchmark similarity</text>
+    <text x="1167" y="520" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#424242">Faithfulness + Diversity metrics</text>
+  </g>
+
+  <path d="M 1167 290 L 1167 310" stroke="#37474F" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 1167 420 L 1167 440" stroke="#37474F" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+
+  <path d="M 416 365 L 484 240" stroke="#1976D2" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="445" y="290" font-family="Arial, sans-serif" font-size="10" fill="#1976D2" font-weight="bold">Quality Model</text>
+  
+  <path d="M 916 365 L 984 240" stroke="#7B1FA2" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="945" y="290" font-family="Arial, sans-serif" font-size="10" fill="#7B1FA2" font-weight="bold">Raw Samples</text>
+  
+  <path d="M 416 365 L 450 365 L 450 235 L 984 235" stroke="#1976D2" stroke-width="2" stroke-dasharray="5,3" fill="none"/>
+
+  <rect x="200" y="780" width="1000" height="50" rx="8" fill="#F5F5F5" stroke="#BDBDBD" stroke-width="1"/>
+  <text x="700" y="805" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#1A237E">LLM-based Synthetic Data Generation</text>
+  <text x="700" y="822" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#546E7A">Three-stage pipeline: Discriminator Training - LLM-driven Synthesis - Quality Assurance</text>
+</svg>

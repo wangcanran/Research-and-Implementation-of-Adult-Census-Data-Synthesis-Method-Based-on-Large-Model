@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <!-- Title -->
+  <text x="600" y="30" font-size="24" font-weight="bold" text-anchor="middle" fill="#2c3e50">
+    改进版数据生成系统架构
+  </text>
+  <text x="600" y="55" font-size="14" text-anchor="middle" fill="#7f8c8d">
+    Quality-Diversity Balanced Architecture
+  </text>
+  
+  <!-- Real Data Input -->
+  <rect x="50" y="100" width="200" height="80" fill="#3498db" stroke="#2980b9" stroke-width="2" rx="5"/>
+  <text x="150" y="135" font-size="16" font-weight="bold" text-anchor="middle" fill="white">真实数据</text>
+  <text x="150" y="160" font-size="12" text-anchor="middle" fill="white">Real Data (3000+)</text>
+  
+  <!-- Target Distribution -->
+  <rect x="50" y="220" width="200" height="80" fill="#9b59b6" stroke="#8e44ad" stroke-width="2" rx="5"/>
+  <text x="150" y="255" font-size="16" font-weight="bold" text-anchor="middle" fill="white">目标分布</text>
+  <text x="150" y="280" font-size="12" text-anchor="middle" fill="white">Target Distribution</text>
+  
+  <!-- Discriminator -->
+  <rect x="50" y="340" width="200" height="100" fill="#e74c3c" stroke="#c0392b" stroke-width="2" rx="5"/>
+  <text x="150" y="375" font-size="16" font-weight="bold" text-anchor="middle" fill="white">全局判别器</text>
+  <text x="150" y="395" font-size="11" text-anchor="middle" fill="white">Holistic Discriminator</text>
+  <text x="150" y="415" font-size="11" text-anchor="middle" fill="white">权重: 5% ↓80%</text>
+  <text x="150" y="430" font-size="10" text-anchor="middle" fill="#ecf0f1">仅用于质量把关</text>
+  
+  <!-- Arrows from inputs -->
+  <path d="M 150 180 L 150 220" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 250 140 L 400 250" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 250 260 L 400 290" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 250 390 L 400 360" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Core Scheduler -->
+  <rect x="400" y="220" width="350" height="180" fill="#16a085" stroke="#138d75" stroke-width="3" rx="8"/>
+  <text x="575" y="250" font-size="18" font-weight="bold" text-anchor="middle" fill="white">
+    多样性增强调度器
+  </text>
+  <text x="575" y="270" font-size="12" text-anchor="middle" fill="white">DiversityEnhancedScheduler</text>
+  
+  <!-- Strategy boxes inside scheduler -->
+  <rect x="420" y="285" width="140" height="50" fill="#1abc9c" stroke="#16a085" stroke-width="1" rx="3"/>
+  <text x="490" y="305" font-size="12" font-weight="bold" text-anchor="middle" fill="white">分布探索 90%</text>
+  <text x="490" y="322" font-size="10" text-anchor="middle" fill="white">自适应校正</text>
+  
+  <rect x="580" y="285" width="140" height="50" fill="#f39c12" stroke="#e67e22" stroke-width="1" rx="3"/>
+  <text x="650" y="305" font-size="12" font-weight="bold" text-anchor="middle" fill="white">稀有采样 5%</text>
+  <text x="650" y="322" font-size="10" text-anchor="middle" fill="white">强制探索低频</text>
+  
+  <rect x="420" y="345" width="140" height="50" fill="#e74c3c" stroke="#c0392b" stroke-width="1" rx="3"/>
+  <text x="490" y="365" font-size="12" font-weight="bold" text-anchor="middle" fill="white">判别器引导 5%</text>
+  <text x="490" y="382" font-size="10" text-anchor="middle" fill="white">弱类别修复</text>
+  
+  <rect x="580" y="345" width="140" height="50" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1" rx="3"/>
+  <text x="650" y="365" font-size="11" font-weight="bold" text-anchor="middle" fill="white">字段频率统计</text>
+  <text x="650" y="382" font-size="10" text-anchor="middle" fill="white">实时监控</text>
+  
+  <!-- Demonstration Manager -->
+  <rect x="400" y="480" width="160" height="70" fill="#34495e" stroke="#2c3e50" stroke-width="2" rx="5"/>
+  <text x="480" y="510" font-size="14" font-weight="bold" text-anchor="middle" fill="white">示例管理器</text>
+  <text x="480" y="530" font-size="11" text-anchor="middle" fill="white">Demonstration</text>
+  <text x="480" y="545" font-size="11" text-anchor="middle" fill="white">Manager</text>
+  
+  <!-- Adaptive Cache -->
+  <rect x="590" y="480" width="160" height="70" fill="#8e44ad" stroke="#7d3c98" stroke-width="2" rx="5"/>
+  <text x="670" y="505" font-size="14" font-weight="bold" text-anchor="middle" fill="white">自适应缓存</text>
+  <text x="670" y="525" font-size="11" text-anchor="middle" fill="white">Adaptive Cache</text>
+  <text x="670" y="542" font-size="10" text-anchor="middle" fill="#ecf0f1">每50样本重置</text>
+  
+  <!-- Arrows to components -->
+  <path d="M 575 400 L 480 480" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 575 400 L 670 480" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- LLM Decomposer -->
+  <rect x="850" y="220" width="300" height="150" fill="#2ecc71" stroke="#27ae60" stroke-width="3" rx="8"/>
+  <text x="1000" y="250" font-size="18" font-weight="bold" text-anchor="middle" fill="white">
+    LLM 分步生成器
+  </text>
+  <text x="1000" y="275" font-size="12" text-anchor="middle" fill="white">SampleWiseDecomposer + Qwen2.5</text>
+  
+  <!-- LLM steps -->
+  <text x="1000" y="300" font-size="11" text-anchor="middle" fill="white">1. Demographics (年龄/性别/种族)</text>
+  <text x="1000" y="318" font-size="11" text-anchor="middle" fill="white">2. Education (教育背景)</text>
+  <text x="1000" y="336" font-size="11" text-anchor="middle" fill="white">3. Work (职业/工作类型)</text>
+  <text x="1000" y="354" font-size="11" text-anchor="middle" fill="white">4. Outcome (收入预测)</text>
+  
+  <!-- Arrow from scheduler to LLM -->
+  <path d="M 750 310 L 850 295" stroke="#34495e" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="800" y="295" font-size="11" fill="#2c3e50">生成条件</text>
+  
+  <!-- Diversity Prompt Box -->
+  <rect x="850" y="400" width="300" height="60" fill="#f39c12" stroke="#e67e22" stroke-width="2" rx="5"/>
+  <text x="1000" y="425" font-size="13" font-weight="bold" text-anchor="middle" fill="white">多样性约束提示</text>
+  <text x="1000" y="445" font-size="10" text-anchor="middle" fill="white">"Generate DIVERSE values. Vary choices..."</text>
+  
+  <!-- Arrow from cache to LLM -->
+  <path d="M 670 550 L 900 460" stroke="#8e44ad" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+  <text x="780" y="495" font-size="10" fill="#8e44ad">自适应提示</text>
+  
+  <!-- Generated Samples -->
+  <rect x="850" y="520" width="300" height="100" fill="#1abc9c" stroke="#16a085" stroke-width="3" rx="8"/>
+  <text x="1000" y="550" font-size="18" font-weight="bold" text-anchor="middle" fill="white">
+    生成样本
+  </text>
+  <text x="1000" y="575" font-size="12" text-anchor="middle" fill="white">950 samples</text>
+  <text x="1000" y="595" font-size="13" font-weight="bold" text-anchor="middle" fill="white">独特性: 28.4% (5.9x↑)</text>
+  <text x="1000" y="612" font-size="13" font-weight="bold" text-anchor="middle" fill="white">质量: 100%</text>
+  
+  <!-- Arrow from LLM to samples -->
+  <path d="M 1000 370 L 1000 520" stroke="#34495e" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Quality Filter -->
+  <rect x="600" y="620" width="150" height="60" fill="#e74c3c" stroke="#c0392b" stroke-width="2" rx="5"/>
+  <text x="675" y="645" font-size="13" font-weight="bold" text-anchor="middle" fill="white">质量过滤</text>
+  <text x="675" y="665" font-size="10" text-anchor="middle" fill="white">score > 0.7 通过</text>
+  
+  <!-- Arrow from discriminator to filter -->
+  <path d="M 150 440 L 150 650 L 600 650" stroke="#e74c3c" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+  
+  <!-- Arrow from samples to filter -->
+  <path d="M 850 570 L 750 650" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Feedback loop -->
+  <path d="M 600 650 L 400 650 L 400 400" stroke="#16a085" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+  <text x="500" y="670" font-size="10" fill="#16a085">统计反馈</text>
+  
+  <!-- Key Improvements Box -->
+  <rect x="50" y="650" width="250" height="120" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2" rx="5"/>
+  <text x="175" y="675" font-size="14" font-weight="bold" text-anchor="middle" fill="#2c3e50">
+    核心改进
+  </text>
+  <text x="60" y="700" font-size="11" fill="#34495e">✓ 判别器权重: 20% → 5%</text>
+  <text x="60" y="720" font-size="11" fill="#34495e">✓ 自适应缓存: 动态分布校正</text>
+  <text x="60" y="740" font-size="11" fill="#34495e">✓ 稀有值采样: 强制探索</text>
+  <text x="60" y="760" font-size="11" fill="#34495e">✓ 多样性提示: LLM约束</text>
+  
+  <!-- Results Box -->
+  <rect x="900" y="680" width="250" height="90" fill="#2ecc71" stroke="#27ae60" stroke-width="2" rx="5"/>
+  <text x="1025" y="705" font-size="14" font-weight="bold" text-anchor="middle" fill="white">
+    最终成果
+  </text>
+  <text x="910" y="730" font-size="12" fill="white">独特性: 4.8% → 28.4% (5.9x)</text>
+  <text x="910" y="750" font-size="12" fill="white">质量: 95.2% → 100% (+4.8%)</text>
+  <text x="910" y="765" font-size="11" fill="#ecf0f1">重复率: 21x → 3.5x (↓83%)</text>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#34495e"/>
+    </marker>
+  </defs>
+  
+  <!-- Legend -->
+  <text x="600" y="790" font-size="10" text-anchor="middle" fill="#7f8c8d">
+    实线: 数据流 | 虚线: 反馈/约束 | 厚边框: 核心组件
+  </text>
+</svg>

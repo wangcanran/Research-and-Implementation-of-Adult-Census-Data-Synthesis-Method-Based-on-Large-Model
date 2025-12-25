@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900">
+  <!-- Title -->
+  <text x="700" y="40" font-size="28" font-weight="bold" text-anchor="middle" fill="#2c3e50">
+    数据生成系统架构
+  </text>
+  <text x="700" y="70" font-size="16" text-anchor="middle" fill="#7f8c8d">
+    Synthetic Data Generation System Architecture
+  </text>
+  
+  <!-- Layer 1: Data Sources -->
+  <rect x="50" y="120" width="1300" height="150" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2" rx="8"/>
+  <text x="70" y="145" font-size="14" font-weight="bold" fill="#34495e">数据层 (Data Layer)</text>
+  
+  <rect x="100" y="170" width="220" height="80" fill="#3498db" stroke="#2980b9" stroke-width="2" rx="5"/>
+  <text x="210" y="200" font-size="16" font-weight="bold" text-anchor="middle" fill="white">真实数据集</text>
+  <text x="210" y="225" font-size="13" text-anchor="middle" fill="white">Real Data Samples</text>
+  
+  <rect x="380" y="170" width="220" height="80" fill="#9b59b6" stroke="#8e44ad" stroke-width="2" rx="5"/>
+  <text x="490" y="200" font-size="16" font-weight="bold" text-anchor="middle" fill="white">目标分布定义</text>
+  <text x="490" y="225" font-size="13" text-anchor="middle" fill="white">Target Distribution</text>
+  
+  <rect x="660" y="170" width="220" height="80" fill="#e74c3c" stroke="#c0392b" stroke-width="2" rx="5"/>
+  <text x="770" y="200" font-size="16" font-weight="bold" text-anchor="middle" fill="white">判别器模型</text>
+  <text x="770" y="225" font-size="13" text-anchor="middle" fill="white">Discriminator Model</text>
+  
+  <rect x="940" y="170" width="220" height="80" fill="#f39c12" stroke="#e67e22" stroke-width="2" rx="5"/>
+  <text x="1050" y="200" font-size="16" font-weight="bold" text-anchor="middle" fill="white">大语言模型</text>
+  <text x="1050" y="225" font-size="13" text-anchor="middle" fill="white">LLM (GPT-4.1)</text>
+  
+  <!-- Arrows down -->
+  <path d="M 210 250 L 210 320" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 490 250 L 490 320" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 770 250 L 770 320" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 1050 250 L 1050 380" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Layer 2: Core Components -->
+  <rect x="50" y="310" width="1300" height="280" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2" rx="8"/>
+  <text x="70" y="335" font-size="14" font-weight="bold" fill="#34495e">核心组件层 (Core Components)</text>
+  
+  <!-- Demonstration Manager -->
+  <rect x="100" y="360" width="200" height="100" fill="#34495e" stroke="#2c3e50" stroke-width="2" rx="5"/>
+  <text x="200" y="390" font-size="15" font-weight="bold" text-anchor="middle" fill="white">示例管理器</text>
+  <text x="200" y="415" font-size="12" text-anchor="middle" fill="white">Demonstration Manager</text>
+  <text x="200" y="435" font-size="11" text-anchor="middle" fill="#bdc3c7">选择相似示例</text>
+  
+  <!-- Scheduler -->
+  <rect x="360" y="360" width="240" height="200" fill="#16a085" stroke="#138d75" stroke-width="3" rx="5"/>
+  <text x="480" y="390" font-size="16" font-weight="bold" text-anchor="middle" fill="white">调度器</text>
+  <text x="480" y="415" font-size="13" text-anchor="middle" fill="white">Scheduler</text>
+  
+  <rect x="375" y="435" width="100" height="40" fill="#1abc9c" stroke="#16a085" stroke-width="1" rx="3"/>
+  <text x="425" y="460" font-size="11" text-anchor="middle" fill="white">分布探索</text>
+  
+  <rect x="490" y="435" width="100" height="40" fill="#1abc9c" stroke="#16a085" stroke-width="1" rx="3"/>
+  <text x="540" y="460" font-size="11" text-anchor="middle" fill="white">判别器引导</text>
+  
+  <rect x="375" y="485" width="100" height="40" fill="#1abc9c" stroke="#16a085" stroke-width="1" rx="3"/>
+  <text x="425" y="510" font-size="11" text-anchor="middle" fill="white">稀有值采样</text>
+  
+  <rect x="490" y="485" width="100" height="40" fill="#1abc9c" stroke="#16a085" stroke-width="1" rx="3"/>
+  <text x="540" y="510" font-size="11" text-anchor="middle" fill="white">字段统计</text>
+  
+  <!-- Adaptive Cache -->
+  <rect x="660" y="360" width="200" height="100" fill="#8e44ad" stroke="#7d3c98" stroke-width="2" rx="5"/>
+  <text x="760" y="390" font-size="15" font-weight="bold" text-anchor="middle" fill="white">自适应缓存</text>
+  <text x="760" y="415" font-size="12" text-anchor="middle" fill="white">Adaptive Cache</text>
+  <text x="760" y="435" font-size="11" text-anchor="middle" fill="#bdc3c7">分布监控与校正</text>
+  
+  <!-- Decomposer -->
+  <rect x="920" y="380" width="240" height="180" fill="#2ecc71" stroke="#27ae60" stroke-width="3" rx="5"/>
+  <text x="1040" y="410" font-size="16" font-weight="bold" text-anchor="middle" fill="white">分步生成器</text>
+  <text x="1040" y="435" font-size="12" text-anchor="middle" fill="white">Decomposer</text>
+  
+  <text x="1040" y="465" font-size="12" text-anchor="middle" fill="white">① Demographics</text>
+  <text x="1040" y="485" font-size="12" text-anchor="middle" fill="white">② Education</text>
+  <text x="1040" y="505" font-size="12" text-anchor="middle" fill="white">③ Work</text>
+  <text x="1040" y="525" font-size="12" text-anchor="middle" fill="white">④ Outcome</text>
+  
+  <!-- Horizontal connections -->
+  <path d="M 300 410 L 360 455" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 600 455 L 660 410" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 860 455 L 920 470" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Arrow labels -->
+  <text x="330" y="425" font-size="10" fill="#7f8c8d">示例</text>
+  <text x="625" y="425" font-size="10" fill="#7f8c8d">校正提示</text>
+  <text x="875" y="455" font-size="10" fill="#7f8c8d">生成条件</text>
+  
+  <!-- Layer 3: Generation Process -->
+  <rect x="50" y="620" width="1300" height="120" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2" rx="8"/>
+  <text x="70" y="645" font-size="14" font-weight="bold" fill="#34495e">生成与评估层 (Generation &amp; Evaluation)</text>
+  
+  <!-- Generation -->
+  <rect x="150" y="670" width="200" height="50" fill="#2ecc71" stroke="#27ae60" stroke-width="2" rx="5"/>
+  <text x="250" y="700" font-size="14" font-weight="bold" text-anchor="middle" fill="white">样本生成</text>
+  
+  <!-- Quality Filter -->
+  <rect x="450" y="670" width="200" height="50" fill="#e74c3c" stroke="#c0392b" stroke-width="2" rx="5"/>
+  <text x="550" y="700" font-size="14" font-weight="bold" text-anchor="middle" fill="white">质量过滤</text>
+  
+  <!-- Distribution Check -->
+  <rect x="750" y="670" width="200" height="50" fill="#9b59b6" stroke="#8e44ad" stroke-width="2" rx="5"/>
+  <text x="850" y="700" font-size="14" font-weight="bold" text-anchor="middle" fill="white">分布验证</text>
+  
+  <!-- Final Output -->
+  <rect x="1050" y="670" width="200" height="50" fill="#3498db" stroke="#2980b9" stroke-width="2" rx="5"/>
+  <text x="1150" y="700" font-size="14" font-weight="bold" text-anchor="middle" fill="white">输出数据集</text>
+  
+  <!-- Arrows in generation layer -->
+  <path d="M 1040 560 L 250 670" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 350 695 L 450 695" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 650 695 L 750 695" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 950 695 L 1050 695" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Feedback loops -->
+  <path d="M 550 670 L 550 600 L 480 560" stroke="#e74c3c" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+  <path d="M 850 670 L 850 600 L 760 460" stroke="#9b59b6" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+  
+  <text x="510" y="620" font-size="10" fill="#e74c3c">质量反馈</text>
+  <text x="810" y="620" font-size="10" fill="#9b59b6">分布反馈</text>
+  
+  <!-- Data flow labels -->
+  <text x="600" y="810" font-size="12" text-anchor="middle" fill="#2c3e50" font-weight="bold">
+    数据流向
+  </text>
+  <line x1="400" y1="830" x2="480" y2="830" stroke="#34495e" stroke-width="2"/>
+  <text x="490" y="835" font-size="11" fill="#7f8c8d">主要流程</text>
+  
+  <line x1="550" y1="830" x2="630" y2="830" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5"/>
+  <text x="640" y="835" font-size="11" fill="#7f8c8d">反馈循环</text>
+  
+  <rect x="730" y="820" width="20" height="20" fill="#16a085" stroke="#138d75" stroke-width="2"/>
+  <text x="760" y="835" font-size="11" fill="#7f8c8d">核心模块</text>
+  
+  <rect x="860" y="820" width="20" height="20" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+  <text x="890" y="835" font-size="11" fill="#7f8c8d">输入/输出</text>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#34495e"/>
+    </marker>
+  </defs>
+</svg>
